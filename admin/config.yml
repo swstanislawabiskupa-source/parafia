@@ -33,7 +33,7 @@ collections:
       - { label: "Tytuł ogłoszenia", name: "tytul", widget: "string", hint: "Krótki, jasny tytuł, np. 'Zapisy na pielgrzymkę'" }
       - { label: "Data ogłoszenia", name: "data", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, default: "" }
       - label: "Treść ogłoszenia"
-        name: "tresc"
+        name: "body"
         widget: "markdown"
         hint: "Zaznacz tekst i użyj przycisku B, żeby pogrubić ważny fragment."
         buttons: ["bold", "italic"]
