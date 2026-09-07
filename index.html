@@ -46,16 +46,12 @@
 
     <!-- ============================================
          OGŁOSZENIE PRZYPIĘTE
-         Ten blok pokazuje się TYLKO gdy operator
-         ustawi "Przypnij na górze" w panelu admina.
-         W wersji z CMS ten fragment będzie generowany
-         automatycznie z pliku _data/ogloszenia/*.md
+         Ten kontener wypełnia się automatycznie
+         skryptem na dole strony, na podstawie
+         ogłoszeń oznaczonych "Przypnij na górze"
+         w panelu /admin.
          ============================================ -->
-    <div class="pinned">
-      <span class="pin-label">📌 Ważne ogłoszenie</span>
-      <h3>Odpust parafialny — 15 września</h3>
-      <p>Serdecznie zapraszamy na uroczystą Mszę Świętą odpustową o godz. 12:00. Po Mszy poczęstunek na placu przykościelnym.</p>
-    </div>
+    <div id="pinned-container"></div>
 
     <section class="section" id="msze">
       <h2 class="section-title">Godziny Mszy Świętych</h2>
@@ -86,40 +82,15 @@
 
       <!-- ============================================
            LISTA OGŁOSZEŃ
-           W wersji z CMS każdy blok .announcement
-           będzie generowany automatycznie z osobnego
-           pliku w _data/ogloszenia/ — operator nie
-           edytuje tego HTML-a, tylko wypełnia formularz
-           w panelu /admin.
+           Wypełniana automatycznie skryptem na dole
+           strony — pobiera pliki z folderu
+           _data/ogloszenia/ w repozytorium GitHub.
+           Operator nie edytuje tego HTML-a, tylko
+           wypełnia formularz w panelu /admin.
            ============================================ -->
 
-      <div class="announcements">
-
-        <article class="announcement important">
-          <div class="meta">
-            <time datetime="2026-09-01">1 września 2026</time>
-            <span class="flag">Ważne</span>
-          </div>
-          <h3>Zmiana godzin kancelarii parafialnej</h3>
-          <p class="body">Od września kancelaria parafialna będzie czynna w <strong>nowych godzinach</strong>: wtorki i czwartki 16:00–18:00. Prosimy o dostosowanie się do nowego harmonogramu przy załatwianiu spraw metrykalnych.</p>
-        </article>
-
-        <article class="announcement">
-          <div class="meta">
-            <time datetime="2026-08-28">28 sierpnia 2026</time>
-          </div>
-          <h3>Zapisy na przygotowanie do bierzmowania</h3>
-          <p class="body">Młodzież klas ósmych oraz starsza zapraszana jest do zapisów na kurs przygotowujący do sakramentu bierzmowania. Zapisy przyjmuje ksiądz wikariusz po Mszy niedzielnej lub w kancelarii.</p>
-        </article>
-
-        <article class="announcement">
-          <div class="meta">
-            <time datetime="2026-08-20">20 sierpnia 2026</time>
-          </div>
-          <h3>Dziękczynienie za dożynki</h3>
-          <p class="body">Dziękujemy wszystkim, którzy przygotowali wieńce dożynkowe i włączyli się w przygotowanie uroczystości. Bóg zapłać za ofiarność i wspólną pracę.</p>
-        </article>
-
+      <div class="announcements" id="announcements-list">
+        <p>Wczytywanie ogłoszeń…</p>
       </div>
     </section>
 
@@ -149,6 +120,135 @@
     <p>Parafia Świętego Krzysztofa · Miasteczko</p>
   </div>
 </footer>
+
+<script>
+(function () {
+  // Dane repozytorium, z którego pobierane są ogłoszenia.
+  var OWNER = "swstanislawabiskupa-source";
+  var REPO = "parafia";
+  var PATH = "_data/ogloszenia";
+
+  var MONTHS = ["stycznia","lutego","marca","kwietnia","maja","czerwca",
+                "lipca","sierpnia","września","października","listopada","grudnia"];
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  // Bardzo prosty formater: obsługuje **pogrubienie** i akapity.
+  function formatBody(text) {
+    var escaped = escapeHtml(text);
+    var withBold = escaped.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    var paragraphs = withBold.split(/\n\s*\n/).map(function (p) {
+      return "<p>" + p.replace(/\n/g, "<br>") + "</p>";
+    });
+    return paragraphs.join("");
+  }
+
+  function formatDate(dateStr) {
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  // Parsuje plik .md z nagłówkiem YAML (format tworzony przez panel CMS).
+  function parseAnnouncement(raw) {
+    var match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+    if (!match) return null;
+    var front = match[1];
+    var body = match[2].trim();
+
+    function field(name) {
+      var re = new RegExp("^" + name + ":\\s*(.*)$", "m");
+      var m = front.match(re);
+      if (!m) return "";
+      return m[1].trim().replace(/^"(.*)"$/, "$1");
+    }
+
+    return {
+      tytul: field("tytul") || "(bez tytułu)",
+      data: field("data"),
+      wazne: field("wazne") === "true",
+      przypniete: field("przypniete") === "true",
+      tresc: body
+    };
+  }
+
+  function renderPinned(item, container) {
+    if (!item) {
+      container.innerHTML = "";
+      return;
+    }
+    container.innerHTML =
+      '<div class="pinned">' +
+        '<span class="pin-label">📌 Ważne ogłoszenie</span>' +
+        "<h3>" + escapeHtml(item.tytul) + "</h3>" +
+        formatBody(item.tresc) +
+      "</div>";
+  }
+
+  function renderList(items, container) {
+    if (items.length === 0) {
+      container.innerHTML = "<p>Obecnie brak ogłoszeń.</p>";
+      return;
+    }
+    container.innerHTML = items.map(function (item) {
+      return (
+        '<article class="announcement ' + (item.wazne ? "important" : "") + '">' +
+          '<div class="meta">' +
+            (item.data ? "<time>" + escapeHtml(formatDate(item.data)) + "</time>" : "") +
+            (item.wazne ? '<span class="flag">Ważne</span>' : "") +
+          "</div>" +
+          "<h3>" + escapeHtml(item.tytul) + "</h3>" +
+          '<div class="body">' + formatBody(item.tresc) + "</div>" +
+        "</article>"
+      );
+    }).join("");
+  }
+
+  async function loadAnnouncements() {
+    var pinnedContainer = document.getElementById("pinned-container");
+    var listContainer = document.getElementById("announcements-list");
+
+    try {
+      var listUrl = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/" + PATH;
+      var listRes = await fetch(listUrl);
+      if (!listRes.ok) throw new Error("Nie udało się pobrać listy ogłoszeń.");
+      var files = await listRes.json();
+
+      if (!Array.isArray(files)) throw new Error("Nieoczekiwana odpowiedź.");
+      var mdFiles = files.filter(function (f) { return f.name && f.name.endsWith(".md"); });
+
+      var items = await Promise.all(mdFiles.map(async function (f) {
+        var res = await fetch(f.download_url);
+        var text = await res.text();
+        return parseAnnouncement(text);
+      }));
+
+      items = items.filter(Boolean);
+      items.sort(function (a, b) {
+        return new Date(b.data) - new Date(a.data);
+      });
+
+      var pinned = items.find(function (i) { return i.przypniete; });
+      var rest = items.filter(function (i) { return i !== pinned; });
+
+      renderPinned(pinned, pinnedContainer);
+      renderList(rest, listContainer);
+
+    } catch (err) {
+      console.error(err);
+      listContainer.innerHTML =
+        "<p>Nie udało się wczytać ogłoszeń. Spróbuj odświeżyć stronę za chwilę.</p>";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadAnnouncements);
+})();
+</script>
 
 </body>
 </html>
