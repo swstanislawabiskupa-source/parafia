@@ -1,0 +1,58 @@
+# ===========================================================
+# Konfiguracja panelu ogłoszeń (Decap CMS)
+# ===========================================================
+# To jest jedyny plik, który określa, JAK wygląda formularz
+# widziany przez operatora. Nie zawiera on żadnych haseł -
+# logowanie obsługuje osobno Netlify Identity (patrz notatka
+# na końcu pliku).
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Operator NIE widzi tego ekranu - to tylko techniczne ustawienie,
+# które mówi systemowi, gdzie fizycznie zapisywać pliki ogłoszeń.
+media_folder: "images/ogloszenia"
+public_folder: "/images/ogloszenia"
+
+# Panel logowania będzie po polsku
+locale: 'pl'
+
+collections:
+  - name: "ogloszenia"
+    label: "Ogłoszenia duszpasterskie"
+    label_singular: "Ogłoszenie"
+    folder: "_data/ogloszenia"
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{tytul}} — {{data}}"
+    sortable_fields: ['data', 'tytul']
+    fields:
+      - { label: "Tytuł ogłoszenia", name: "tytul", widget: "string", hint: "Krótki, jasny tytuł, np. 'Zapisy na pielgrzymkę'" }
+      - { label: "Data ogłoszenia", name: "data", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, default: "" }
+      - label: "Treść ogłoszenia"
+        name: "tresc"
+        widget: "markdown"
+        hint: "Zaznacz tekst i użyj przycisku B, żeby pogrubić ważny fragment."
+        buttons: ["bold", "italic"]
+        editor_components: []
+        modes: ["rich_text"]
+      - label: "Oznacz jako ważne"
+        name: "wazne"
+        widget: "boolean"
+        default: false
+        hint: "Doda kolorowe wyróżnienie przy ogłoszeniu na liście."
+      - label: "Przypnij na górze strony"
+        name: "przypniete"
+        widget: "boolean"
+        default: false
+        hint: "Ogłoszenie pojawi się na samej górze strony, nad wszystkimi innymi. Odznacz, żeby je zdjąć z góry."
+
+# ===========================================================
+# NOTATKA (do usunięcia po wdrożeniu, nie widoczna dla operatora):
+# Logowanie do tego panelu jest obsługiwane przez Netlify Identity.
+# Każdy użytkownik panelu ma osobne konto e-mail + hasło,
+# zakładane przez administratora strony w panelu Netlify,
+# NIE przez ten plik. Ten plik tylko opisuje formularz.
+# ===========================================================
