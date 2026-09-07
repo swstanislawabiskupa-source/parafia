@@ -25,7 +25,8 @@ collections:
     folder: "_data/ogloszenia"
     create: true
     delete: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{tytul}}"
+    identifier_field: tytul
     summary: "{{tytul}} — {{data}}"
     sortable_fields: ['data', 'tytul']
     fields:
