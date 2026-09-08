@@ -19,36 +19,49 @@ public_folder: "/images/ogloszenia"
 locale: 'pl'
 
 collections:
-  - name: "ogloszenia"
+  - name: "ogloszenia_zbiorcze"
     label: "Ogłoszenia duszpasterskie"
-    label_singular: "Ogłoszenie"
-    folder: "_data/ogloszenia"
-    create: true
-    delete: true
-    slug: "{{year}}-{{month}}-{{day}}-{{tytul}}"
-    identifier_field: tytul
-    summary: "{{tytul}} — {{data}}"
-    sortable_fields: ['data', 'tytul']
-    fields:
-      - { label: "Tytuł ogłoszenia", name: "tytul", widget: "string", hint: "Krótki, jasny tytuł, np. 'Zapisy na pielgrzymkę'" }
-      - { label: "Data ogłoszenia", name: "data", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, default: "" }
-      - label: "Treść ogłoszenia"
-        name: "body"
-        widget: "markdown"
-        hint: "Zaznacz tekst i użyj przycisku B, żeby pogrubić ważny fragment."
-        buttons: ["bold", "italic"]
-        editor_components: []
-        modes: ["rich_text"]
-      - label: "Oznacz jako ważne"
-        name: "wazne"
-        widget: "boolean"
-        default: false
-        hint: "Doda kolorowe wyróżnienie przy ogłoszeniu na liście."
-      - label: "Przypnij na górze strony"
-        name: "przypniete"
-        widget: "boolean"
-        default: false
-        hint: "Ogłoszenie pojawi się na samej górze strony, nad wszystkimi innymi. Odznacz, żeby je zdjąć z góry."
+    files:
+      - name: "lista"
+        label: "Lista ogłoszeń"
+        file: "_data/ogloszenia.json"
+        format: "json"
+        description: "Edytuj wszystkie ogłoszenia naraz: dodawaj, usuwaj lub zmieniaj wpisy, a na końcu kliknij jeden raz 'Zapisz'."
+        fields:
+          - label: "Ogłoszenia"
+            name: "ogloszenia"
+            widget: "list"
+            summary: "{{tytul}} — {{data}}"
+            fields:
+              - { label: "Tytuł ogłoszenia", name: "tytul", widget: "string", hint: "Krótki, jasny tytuł, np. 'Zapisy na pielgrzymkę'" }
+              - { label: "Data ogłoszenia", name: "data", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, default: "" }
+              - label: "Treść ogłoszenia"
+                name: "tresc"
+                widget: "markdown"
+                hint: "Zaznacz tekst i użyj przycisku B, żeby pogrubić ważny fragment."
+                buttons: ["bold", "italic"]
+                editor_components: []
+                modes: ["rich_text"]
+              - { label: "Oznacz jako ważne", name: "wazne", widget: "boolean", default: false, hint: "Doda kolorowe wyróżnienie przy ogłoszeniu na liście." }
+              - { label: "Przypnij na górze strony", name: "przypniete", widget: "boolean", default: false, hint: "Ogłoszenie pojawi się na samej górze strony, nad wszystkimi innymi. Odznacz, żeby je zdjąć z góry." }
+
+  - name: "intencje_zbiorcze"
+    label: "Intencje mszalne"
+    files:
+      - name: "lista"
+        label: "Tabela intencji"
+        file: "_data/intencje.json"
+        format: "json"
+        description: "Edytuj całą tabelę naraz: dodawaj, usuwaj lub zmieniaj wiersze, a na końcu kliknij jeden raz 'Zapisz'."
+        fields:
+          - label: "Lista intencji"
+            name: "intencje"
+            widget: "list"
+            summary: "{{data}} {{godzina}} — {{tresc}}"
+            fields:
+              - { label: "Data Mszy", name: "data", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, default: "" }
+              - { label: "Godzina Mszy", name: "godzina", widget: "string", hint: "np. 8:00, 10:30, 17:00" }
+              - { label: "Treść intencji", name: "tresc", widget: "string", hint: "np. 'Za + Jana Kowalskiego' albo 'W intencji parafian'" }
 
 # ===========================================================
 # NOTATKA (do usunięcia po wdrożeniu, nie widoczna dla operatora):

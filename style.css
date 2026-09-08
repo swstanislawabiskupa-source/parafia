@@ -249,6 +249,40 @@ nav.site-nav a:focus-visible {
   font-weight: 600;
 }
 
+/* ---------- Mass intentions ---------- */
+
+.intentions-list {
+  background: #fff;
+  border: 1px solid var(--beige);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.intention-row {
+  display: flex;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--beige);
+  align-items: baseline;
+}
+
+.intention-row:last-child {
+  border-bottom: none;
+}
+
+.intention-row .intention-date {
+  font-weight: 600;
+  color: var(--ink);
+  min-width: 92px;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.intention-row .intention-text {
+  color: #3a4a5a;
+  font-size: 0.95rem;
+}
+
 /* ---------- Announcements ---------- */
 
 .announcements {
