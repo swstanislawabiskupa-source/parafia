@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parafia Świętego Stanisława Biskupa w Godzianowie</title>
-<meta name="description" content="Parafia Świętego Stanisława Biskupa w Godzianowie — godziny Mszy Świętych, ogłoszenia duszpasterskie, kontakt.">
+<title>Parafia Świętego Krzysztofa</title>
+<meta name="description" content="Parafia Świętego Krzysztofa — godziny Mszy Świętych, ogłoszenia duszpasterskie, kontakt.">
 <link rel="stylesheet" href="style.css">
 <!-- Obsługa logowania do panelu ogłoszeń (wymagane tylko dla przycisku logowania) -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -25,10 +25,11 @@
 <header class="site-header">
   <div class="wrap">
     <p class="parish-name">
-      Parafia Świętego Stanisława Biskupa w Godzianowie
-      <span class="sub">Rzymskokatolicka</span>
+      Parafia Świętego Krzysztofa
+      <span class="sub">Rzymskokatolicka Diecezja Lokalna</span>
     </p>
     <nav class="site-nav">
+      <a href="#intencje">Intencje</a>
       <a href="#ogloszenia">Ogłoszenia</a>
       <a href="#msze">Msze Święte</a>
       <a href="#kontakt">Kontakt</a>
@@ -40,8 +41,8 @@
   <div class="wrap">
 
     <section class="hero">
-      
-      <p3>Zapraszamy do wspólnej modlitwy, udziału w sakramentach i życia naszej parafialnej wspólnoty.</p3>
+      <h1>Wspólnota modlitwy i sąsiedztwa od 1932 roku</h1>
+      <p>Zapraszamy do wspólnej modlitwy, udziału w sakramentach i życia naszej parafialnej wspólnoty.</p>
     </section>
 
     <!-- ============================================
@@ -59,19 +60,37 @@
         <div class="mass-card">
           <h3>Niedziele i święta</h3>
           <ul>
-            <li><span>8:00</span><span class="time"></span></li>
-            <li><span>10:30</span><span class="time">suma</span></li>
-            <li><span>17:00</span><span class="time"></span></li>
+            <li><span>7:30</span><span class="time">rano</span></li>
+            <li><span>9:00</span><span class="time">rano</span></li>
+            <li><span>10:30</span><span class="time">rano, z udziałem dzieci</span></li>
+            <li><span>12:00</span><span class="time">południe</span></li>
+            <li><span>18:00</span><span class="time">wieczorem</span></li>
           </ul>
         </div>
         <div class="mass-card">
           <h3>Dni powszednie</h3>
           <ul>
-            <li><span>Pon–Pt</span><span class="time">7:00 lub 17:00</span></li>
-            <li><span>Sobota</span><span class="time">7:00 lub 17:30</span></li>
+            <li><span>Pon–Pt</span><span class="time">7:00, 18:00</span></li>
+            <li><span>Sobota</span><span class="time">8:00, 18:00</span></li>
             <li><span>Spowiedź</span><span class="time">30 min przed każdą Mszą</span></li>
           </ul>
         </div>
+      </div>
+    </section>
+
+    <section class="section" id="intencje">
+      <h2 class="section-title">Intencje mszalne</h2>
+
+      <!-- ============================================
+           LISTA INTENCJI
+           Wypełniana automatycznie skryptem na dole
+           strony — pobiera pliki z folderu
+           _data/intencje/ w repozytorium GitHub.
+           Posortowana od najnowszej daty.
+           ============================================ -->
+
+      <div class="intentions-list" id="intentions-list">
+        <p>Wczytywanie intencji…</p>
       </div>
     </section>
 
@@ -97,14 +116,14 @@
       <div class="contact-grid">
         <div class="contact-block">
           <h3>Adres</h3>
-          <p>Parafia Świętego Stanisława Biskupa w Godzianowie</p>
-          <p>ul. Lipowa 1</p>
-          <p>96-126 Godzianów</p>
+          <p>Parafia Świętego Krzysztofa</p>
+          <p>ul. Kościelna 4</p>
+          <p>00-000 Miasteczko</p>
         </div>
         <div class="contact-block">
           <h3>Kontakt</h3>
-          <p>Tel: (46) 831-11-14</p>
-		  <p>Proboszcz Krzysztof Wasiak
+          <p>Tel: 12 345 67 89</p>
+          <p>E-mail: kancelaria@parafia-przyklad.pl</p>
           <p>Kancelaria: wt., czw. 16:00–18:00</p>
         </div>
       </div>
@@ -115,16 +134,15 @@
 
 <footer class="site-footer">
   <div class="wrap">
-    <p>Parafia Świętego Stanisława Biskupa w Godzianowie</p>
+    <p>Parafia Świętego Krzysztofa · Miasteczko</p>
   </div>
 </footer>
 
 <script>
 (function () {
-  // Dane repozytorium, z którego pobierane są ogłoszenia.
+  // Dane repozytorium, z którego pobierane są ogłoszenia i intencje.
   var OWNER = "swstanislawabiskupa-source";
   var REPO = "parafia";
-  var PATH = "_data/ogloszenia";
 
   var MONTHS = ["stycznia","lutego","marca","kwietnia","maja","czerwca",
                 "lipca","sierpnia","września","października","listopada","grudnia"];
@@ -150,29 +168,6 @@
     var d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
     return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
-  }
-
-  // Parsuje plik .md z nagłówkiem YAML (format tworzony przez panel CMS).
-  function parseAnnouncement(raw) {
-    var match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
-    if (!match) return null;
-    var front = match[1];
-    var body = match[2].trim();
-
-    function field(name) {
-      var re = new RegExp("^" + name + ":\\s*(.*)$", "m");
-      var m = front.match(re);
-      if (!m) return "";
-      return m[1].trim().replace(/^"(.*)"$/, "$1");
-    }
-
-    return {
-      tytul: field("tytul") || "(bez tytułu)",
-      data: field("data"),
-      wazne: field("wazne") === "true",
-      przypniete: field("przypniete") === "true",
-      tresc: body
-    };
   }
 
   function renderPinned(item, container) {
@@ -207,26 +202,79 @@
     }).join("");
   }
 
+  // Parsuje zbiorczy plik intencji (jeden plik JSON, edytowany
+  // przez operatora jako cała tabela naraz, żeby ograniczyć
+  // liczbę osobnych wdrożeń).
+  function formatShortDate(dateStr) {
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    var dd = String(d.getDate()).padStart(2, "0");
+    var mmn = String(d.getMonth() + 1).padStart(2, "0");
+    return dd + "." + mmn;
+  }
+
+  function renderIntentions(items, container) {
+    if (items.length === 0) {
+      container.innerHTML = "<p>Obecnie brak wpisanych intencji.</p>";
+      return;
+    }
+    container.innerHTML = items.map(function (item) {
+      return (
+        '<div class="intention-row">' +
+          '<span class="intention-date">' + escapeHtml(formatShortDate(item.data)) + ", " + escapeHtml(item.godzina) + "</span>" +
+          '<span class="intention-text">' + escapeHtml(item.tresc) + "</span>" +
+        "</div>"
+      );
+    }).join("");
+  }
+
+  async function loadIntentions() {
+    var container = document.getElementById("intentions-list");
+    try {
+      var url = "https://raw.githubusercontent.com/" + OWNER + "/" + REPO + "/main/_data/intencje.json?t=" + Date.now();
+      var res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("Brak pliku intencji.");
+      var json = await res.json();
+      var raw = (json && Array.isArray(json.intencje)) ? json.intencje : [];
+
+      var items = raw.map(function (it) {
+        var godzina = it.godzina || "";
+        var parts = godzina.split(":");
+        var hh = (parts[0] || "0").padStart(2, "0");
+        var mm = (parts[1] || "0").padStart(2, "0");
+        var sortKey = new Date((it.data || "1970-01-01") + "T" + hh + ":" + mm + ":00");
+        return { data: it.data || "", godzina: godzina, tresc: it.tresc || "(brak treści)", sortKey: sortKey };
+      });
+
+      items.sort(function (a, b) { return b.sortKey - a.sortKey; });
+      renderIntentions(items, container);
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = "<p>Obecnie brak wpisanych intencji.</p>";
+    }
+  }
+
   async function loadAnnouncements() {
     var pinnedContainer = document.getElementById("pinned-container");
     var listContainer = document.getElementById("announcements-list");
 
     try {
-      var listUrl = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/" + PATH;
-      var listRes = await fetch(listUrl);
-      if (!listRes.ok) throw new Error("Nie udało się pobrać listy ogłoszeń.");
-      var files = await listRes.json();
+      var url = "https://raw.githubusercontent.com/" + OWNER + "/" + REPO + "/main/_data/ogloszenia.json?t=" + Date.now();
+      var res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("Brak pliku ogłoszeń.");
+      var json = await res.json();
+      var raw = (json && Array.isArray(json.ogloszenia)) ? json.ogloszenia : [];
 
-      if (!Array.isArray(files)) throw new Error("Nieoczekiwana odpowiedź.");
-      var mdFiles = files.filter(function (f) { return f.name && f.name.endsWith(".md"); });
+      var items = raw.map(function (it) {
+        return {
+          tytul: it.tytul || "(bez tytułu)",
+          data: it.data || "",
+          wazne: !!it.wazne,
+          przypniete: !!it.przypniete,
+          tresc: it.tresc || ""
+        };
+      });
 
-      var items = await Promise.all(mdFiles.map(async function (f) {
-        var res = await fetch(f.download_url);
-        var text = await res.text();
-        return parseAnnouncement(text);
-      }));
-
-      items = items.filter(Boolean);
       items.sort(function (a, b) {
         return new Date(b.data) - new Date(a.data);
       });
@@ -239,12 +287,14 @@
 
     } catch (err) {
       console.error(err);
-      listContainer.innerHTML =
-        "<p>Nie udało się wczytać ogłoszeń. Spróbuj odświeżyć stronę za chwilę.</p>";
+      listContainer.innerHTML = "<p>Obecnie brak ogłoszeń.</p>";
     }
   }
 
-  document.addEventListener("DOMContentLoaded", loadAnnouncements);
+  document.addEventListener("DOMContentLoaded", function () {
+    loadAnnouncements();
+    loadIntentions();
+  });
 })();
 </script>
 
