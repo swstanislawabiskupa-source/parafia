@@ -1,18 +1,25 @@
 {
   "ogloszenia": [
     {
-      "tytul": "Testowe ogłoszenie z GitHuba",
+      "tytul": "Pilna zmiana w grafiku spowiedzi",
       "data": "2026-09-09",
-      "wazne": false,
+      "wazne": true,
       "przypniete": true,
-      "tresc": "To jest test działania nowej architektury z pliku JSON."
+      "tresc": "W najbliższy czwartek i piątek spowiedź popołudniowa **zostaje wyjątkowo odwołana** z powodu wyjazdu duszpasterzy na rekolekcje kapłańskie. Zapraszamy do sakramentu pokuty w sobotę od 17:30."
     },
     {
-      "tytul": "Testowe ogłoszenie z GitHuba 2",
-      "data": "2026-09-09",
+      "tytul": "Zapisy na autokarową pielgrzymkę",
+      "data": "2026-09-08",
       "wazne": false,
       "przypniete": false,
-      "tresc": "To jest test działania nowej architektury z pliku JSON."
+      "tresc": "Rozpoczęliśmy zapisy na jesienną pielgrzymkę do sanktuarium. Wyjazd planowany jest na ostatnią sobotę miesiąca. \n\nZapisy przyjmowane są w kancelarii w godzinach urzędowania. Koszt wyjazdu to 120 zł. Przy zapisie prosimy o podanie numeru PESEL do ubezpieczenia."
+    },
+    {
+      "tytul": "Spotkanie rodziców dzieci komunijnych",
+      "data": "2026-09-06",
+      "wazne": true,
+      "przypniete": false,
+      "tresc": "Przypominamy, że pierwsze powakacyjne spotkanie organizacyjne dla rodziców dzieci klas trzecich odbędzie się w **najbliższą niedzielę bezpośrednio po Mszy Świętej o godzinie 10:30**. \n\nObecność przynajmniej jednego z rodziców jest obowiązkowa."
     }
   ]
 }
