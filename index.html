@@ -5,8 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parafia Świętego Krzysztofa</title>
 <meta name="description" content="Parafia Świętego Krzysztofa — godziny Mszy Świętych, ogłoszenia duszpasterskie, kontakt.">
+
+<!-- Optymalizacja czcionek -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="style.css">
-<!-- Obsługa logowania do panelu ogłoszeń (wymagane tylko dla przycisku logowania) -->
+<!-- Obsługa logowania do panelu ogłoszeń -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
   if (window.netlifyIdentity) {
@@ -31,7 +37,7 @@
     <nav class="site-nav">
       <a href="#intencje">Intencje</a>
       <a href="#ogloszenia">Ogłoszenia</a>
-      <a href="#msze">Msze Święte</a>
+      <a href="#msze">Liturgia i Nabożeństwa</a>
       <a href="#kontakt">Kontakt</a>
     </nav>
   </div>
@@ -45,17 +51,12 @@
       <p>Zapraszamy do wspólnej modlitwy, udziału w sakramentach i życia naszej parafialnej wspólnoty.</p>
     </section>
 
-    <!-- ============================================
-         OGŁOSZENIE PRZYPIĘTE
-         Ten kontener wypełnia się automatycznie
-         skryptem na dole strony, na podstawie
-         ogłoszeń oznaczonych "Przypnij na górze"
-         w panelu /admin.
-         ============================================ -->
+    <!-- OGŁOSZENIE PRZYPIĘTE -->
     <div id="pinned-container"></div>
 
     <section class="section" id="msze">
-      <h2 class="section-title">Godziny Mszy Świętych</h2>
+      <h2 class="section-title">Msze Święte i Nabożeństwa</h2>
+      
       <div class="mass-times">
         <div class="mass-card">
           <h3>Niedziele i święta</h3>
@@ -67,12 +68,30 @@
             <li><span>18:00</span><span class="time">wieczorem</span></li>
           </ul>
         </div>
+        
         <div class="mass-card">
           <h3>Dni powszednie</h3>
           <ul>
             <li><span>Pon–Pt</span><span class="time">7:00, 18:00</span></li>
             <li><span>Sobota</span><span class="time">8:00, 18:00</span></li>
-            <li><span>Spowiedź</span><span class="time">30 min przed każdą Mszą</span></li>
+          </ul>
+        </div>
+
+        <div class="mass-card">
+          <h3>Sakrament Pokuty</h3>
+          <ul>
+            <li><span>Codziennie</span><span class="time">30 min przed Mszą św.</span></li>
+            <li><span>I Piątek Miesiąca</span><span class="time">17:00 - 18:00</span></li>
+          </ul>
+        </div>
+
+        <div class="mass-card">
+          <h3>Nabożeństwa</h3>
+          <ul>
+            <li><span>Majowe / Czerwcowe</span><span class="time">Po Mszy o 18:00</span></li>
+            <li><span>Różaniec (październik)</span><span class="time">17:30</span></li>
+            <li><span>Droga Krzyżowa</span><span class="time">Piątki Wlkp., 17:15</span></li>
+            <li><span>Gorzkie Żale</span><span class="time">Niedz. Wlkp., 17:15</span></li>
           </ul>
         </div>
       </div>
@@ -80,15 +99,6 @@
 
     <section class="section" id="intencje">
       <h2 class="section-title">Intencje mszalne</h2>
-
-      <!-- ============================================
-           LISTA INTENCJI
-           Wypełniana automatycznie skryptem na dole
-           strony — pobiera pliki z folderu
-           _data/intencje/ w repozytorium GitHub.
-           Posortowana od najnowszej daty.
-           ============================================ -->
-
       <div class="intentions-list" id="intentions-list">
         <p>Wczytywanie intencji…</p>
       </div>
@@ -96,16 +106,6 @@
 
     <section class="section" id="ogloszenia">
       <h2 class="section-title">Ogłoszenia duszpasterskie</h2>
-
-      <!-- ============================================
-           LISTA OGŁOSZEŃ
-           Wypełniana automatycznie skryptem na dole
-           strony — pobiera pliki z folderu
-           _data/ogloszenia/ w repozytorium GitHub.
-           Operator nie edytuje tego HTML-a, tylko
-           wypełnia formularz w panelu /admin.
-           ============================================ -->
-
       <div class="announcements" id="announcements-list">
         <p>Wczytywanie ogłoszeń…</p>
       </div>
@@ -140,7 +140,7 @@
 
 <script>
 (function () {
-  // Dane repozytorium, z którego pobierane są ogłoszenia i intencje.
+  // UWAGA: Ścieżki powróciły do raw.githubusercontent.com, aby omijać wdrożenia Netlify
   var OWNER = "swstanislawabiskupa-source";
   var REPO = "parafia";
 
@@ -154,7 +154,6 @@
       .replace(/>/g, "&gt;");
   }
 
-  // Bardzo prosty formater: obsługuje **pogrubienie** i akapity.
   function formatBody(text) {
     var escaped = escapeHtml(text);
     var withBold = escaped.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
@@ -202,9 +201,6 @@
     }).join("");
   }
 
-  // Parsuje zbiorczy plik intencji (jeden plik JSON, edytowany
-  // przez operatora jako cała tabela naraz, żeby ograniczyć
-  // liczbę osobnych wdrożeń).
   function formatShortDate(dateStr) {
     var d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
