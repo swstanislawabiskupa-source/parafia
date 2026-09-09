@@ -3,7 +3,14 @@
     {
       "tytul": "Testowe ogłoszenie z GitHuba",
       "data": "2026-09-09",
-      "wazne": true,
+      "wazne": false,
+      "przypniete": true,
+      "tresc": "To jest test działania nowej architektury z pliku JSON."
+    }
+    {
+      "tytul": "Testowe ogłoszenie z GitHuba 2",
+      "data": "2026-09-09",
+      "wazne": false,
       "przypniete": false,
       "tresc": "To jest test działania nowej architektury z pliku JSON."
     }
