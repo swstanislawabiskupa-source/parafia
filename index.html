@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parafia Świętego Krzysztofa</title>
-<meta name="description" content="Parafia Świętego Krzysztofa — godziny Mszy Świętych, ogłoszenia duszpasterskie, kontakt.">
+<title>Parafia św. Stanisława Biskupa w Godzianowie</title>
+<meta name="description" content="Parafia św. Stanisława Biskupa w Godzianowie">
 
 <!-- Optymalizacja czcionek -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,8 +31,8 @@
 <header class="site-header">
   <div class="wrap">
     <p class="parish-name">
-      Parafia Świętego Krzysztofa
-      <span class="sub">Rzymskokatolicka Diecezja Lokalna</span>
+      Parafia św. Stanisława Biskupa w Godzianowie
+      <span class="sub">Diecezja Łowicka</span>
     </p>
     <nav class="site-nav">
       <a href="#intencje">Intencje</a>
@@ -47,8 +47,8 @@
   <div class="wrap">
 
     <section class="hero">
-      <h1>Wspólnota modlitwy i sąsiedztwa od 1932 roku</h1>
-      <p>Zapraszamy do wspólnej modlitwy, udziału w sakramentach i życia naszej parafialnej wspólnoty.</p>
+      
+      <p2>Zapraszamy do wspólnej modlitwy, udziału w sakramentach i życia naszej parafialnej wspólnoty.</p2>
     </section>
 
     <!-- OGŁOSZENIE PRZYPIĘTE -->
@@ -61,12 +61,8 @@
         <div class="mass-card">
           <h3>Niedziele i święta</h3>
           <ul>
-            <li><span>7:30</span><span class="time">rano</span></li>
-            <li><span>9:00</span><span class="time">rano</span></li>
-            <li><span>10:30</span><span class="time">rano, z udziałem dzieci</span></li>
-            <li><span>12:00</span><span class="time">południe</span></li>
-            <li><span>18:00</span><span class="time">wieczorem</span></li>
-          </ul>
+            <li><span class="time">7:30, 10:00, 17:00</span></li>
+            </ul>
         </div>
         
         <div class="mass-card">
@@ -116,14 +112,13 @@
       <div class="contact-grid">
         <div class="contact-block">
           <h3>Adres</h3>
-          <p>Parafia Świętego Krzysztofa</p>
-          <p>ul. Kościelna 4</p>
-          <p>00-000 Miasteczko</p>
+          <p>ul. Lipowa 1</p>
+          <p>96-126 Godzianów</p>
         </div>
         <div class="contact-block">
           <h3>Kontakt</h3>
+		  <p>Proboszcz: ks. mgr Krzysztof Wasiak</p>
           <p>Tel: 12 345 67 89</p>
-          <p>E-mail: kancelaria@parafia-przyklad.pl</p>
           <p>Kancelaria: wt., czw. 16:00–18:00</p>
         </div>
       </div>
@@ -134,7 +129,7 @@
 
 <footer class="site-footer">
   <div class="wrap">
-    <p>Parafia Świętego Krzysztofa · Miasteczko</p>
+    <p>Parafia Rzymskokatolica pw. św. Stanisława Biskupa w Godzianowie</p>
   </div>
 </footer>
 
@@ -176,7 +171,7 @@
     }
     container.innerHTML =
       '<div class="pinned">' +
-        '<span class="pin-label">📌 Ważne ogłoszenie</span>' +
+        '<span class="pin-label">📌 Ważne</span>' +
         "<h3>" + escapeHtml(item.tytul) + "</h3>" +
         formatBody(item.tresc) +
       "</div>";
