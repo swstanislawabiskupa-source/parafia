@@ -165,12 +165,20 @@ nav.site-nav a:focus-visible {
 }
 
 .pinned .pin-label {
-  display: block;
+ /* display: block;
   color: var(--wine);
   font-weight: 700;
   font-size: 0.85rem;
-  margin-bottom: 8px;
+  margin-bottom: 8px; */
+   font-size: 0.75rem;
+  color: var(--wine);
+  font-weight: 700;
+  background: rgba(140,47,47,0.08);
+  padding: 2px 8px;
+  border-radius: 20px;
 }
+
+
 
 .pinned h3 {
   font-family: var(--serif);
@@ -379,4 +387,22 @@ nav.site-nav a:focus-visible {
 
 .site-footer a {
   color: var(--gold);
+}
+
+/* Wygaszone (minione) intencje mszalne */
+.intention-row.past-intention {
+  color: #777;          /* Zmiana koloru tekstu na szary */
+  opacity: 0.6;         /* Delikatne przezroczystość całości */
+  border-color: #eee;   /* Jaśniejsza linia pod spodem, by mniej odznaczała się od tła */
+}
+
+/* Odstęp przypiętego ogłoszenia od sekcji poniżej */
+.pinned-announcement {
+  margin-bottom: 36px;
+}
+
+/* Neutralny wygląd plakietki, gdy ogłoszenie jest tylko przypięte, ale nie jest "ważne" */
+.announcement .flag.flag-pinned {
+  color: var(--ink);
+  background: rgba(43, 58, 74, 0.08);
 }

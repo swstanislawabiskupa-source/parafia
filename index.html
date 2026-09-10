@@ -61,7 +61,7 @@
         <div class="mass-card">
           <h3>Niedziele i święta</h3>
           <ul>
-            <li><span class="time">7:30, 10:00, 17:00</span></li>
+            <li><span class="time">7:30, 10:30, 17:00</span></li>
             </ul>
         </div>
         
@@ -164,17 +164,25 @@
     return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
   }
 
-  function renderPinned(item, container) {
+function renderPinned(item, container) {
     if (!item) {
       container.innerHTML = "";
       return;
     }
+
+    var isImportant = !!item.wazne;
+    var badgeText = isImportant ? "📌 Ważne" : "📌";
+    var badgeClass = isImportant ? "flag" : "flag flag-pinned";
+
     container.innerHTML =
-      '<div class="pinned">' +
-        '<span class="pin-label">📌 Ważne</span>' +
+      '<article class="announcement ' + (isImportant ? "important" : "") + ' pinned-announcement">' +
+        '<div class="meta">' +
+          (item.data ? "<time>" + escapeHtml(formatDate(item.data)) + "</time>" : "") +
+          '<span class="' + badgeClass + '">' + badgeText + "</span>" +
+        "</div>" +
         "<h3>" + escapeHtml(item.tytul) + "</h3>" +
-        formatBody(item.tresc) +
-      "</div>";
+        '<div class="body">' + formatBody(item.tresc) + "</div>" +
+      "</article>";
   }
 
   function renderList(items, container) {
@@ -204,14 +212,16 @@
     return dd + "." + mmn;
   }
 
-  function renderIntentions(items, container) {
+ function renderIntentions(items, container) {
     if (items.length === 0) {
       container.innerHTML = "<p>Obecnie brak wpisanych intencji.</p>";
       return;
     }
     container.innerHTML = items.map(function (item) {
+      // Jeśli intencja minęła, dodajemy jej klasę CSS "past-intention"
+      var rowClass = item.isPast ? "intention-row past-intention" : "intention-row";
       return (
-        '<div class="intention-row">' +
+        '<div class="' + rowClass + '">' +
           '<span class="intention-date">' + escapeHtml(formatShortDate(item.data)) + ", " + escapeHtml(item.godzina) + "</span>" +
           '<span class="intention-text">' + escapeHtml(item.tresc) + "</span>" +
         "</div>"
@@ -228,16 +238,35 @@
       var json = await res.json();
       var raw = (json && Array.isArray(json.intencje)) ? json.intencje : [];
 
+      // Ustalamy punkt odniesienia dla czasu
+      var now = new Date();
+      
+      // Punkt odcięcia: dokładnie 7 dni wstecz o północy
+      var cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - 7);
+      cutoffDate.setHours(0, 0, 0, 0);
+
       var items = raw.map(function (it) {
         var godzina = it.godzina || "";
         var parts = godzina.split(":");
         var hh = (parts[0] || "0").padStart(2, "0");
         var mm = (parts[1] || "0").padStart(2, "0");
         var sortKey = new Date((it.data || "1970-01-01") + "T" + hh + ":" + mm + ":00");
-        return { data: it.data || "", godzina: godzina, tresc: it.tresc || "(brak treści)", sortKey: sortKey };
+        
+        return { 
+          data: it.data || "", 
+          godzina: godzina, 
+          tresc: it.tresc || "(brak treści)", 
+          sortKey: sortKey,
+          isPast: sortKey < now // System ocenia, czy Msza już się rozpoczęła/odbyła
+        };
+      }).filter(function (item) {
+        // Zostawiamy w tablicy tylko intencje nowsze niż te sprzed 7 dni
+        return item.sortKey >= cutoffDate;
       });
 
-      items.sort(function (a, b) { return b.sortKey - a.sortKey; });
+      // Sortowanie rosnąco: od najstarszych do najnowszych
+      items.sort(function (a, b) { return a.sortKey - b.sortKey; });
       renderIntentions(items, container);
     } catch (err) {
       console.error(err);
